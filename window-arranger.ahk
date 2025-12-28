@@ -20,6 +20,7 @@ if WinWait(notionExe, , 15) {
     
     ; Store the main window's ID so we can identify the new one later
     mainNotionHwnd := WinGetID(notionExe)
+    existingNotionWindows := WinGetList(notionExe)
     
     ; 2. Create a NEW Notion window for Missing Semester
     ; The startup.bat opened Missing Semester as the LAST tab, so it's currently active
@@ -29,13 +30,34 @@ if WinWait(notionExe, , 15) {
     Sleep 1500  ; Wait for new window to spawn
     
     ; Find the NEW Notion window (not the main one)
-    ; Loop through all Notion windows to find the one that isn't our main window
+    ; Prefer the window that was not present before Ctrl+Shift+N
     newNotionHwnd := 0
     allNotionWindows := WinGetList(notionExe)
     for hwnd in allNotionWindows {
-        if (hwnd != mainNotionHwnd) {
+        if (hwnd == mainNotionHwnd)
+            continue
+
+        wasExisting := false
+        for existingHwnd in existingNotionWindows {
+            if (hwnd == existingHwnd) {
+                wasExisting := true
+                break
+            }
+        }
+
+        if (!wasExisting) {
             newNotionHwnd := hwnd
             break
+        }
+    }
+
+    ; Fallback: if we couldn't diff reliably, pick any other Notion window
+    if (newNotionHwnd == 0) {
+        for hwnd in allNotionWindows {
+            if (hwnd != mainNotionHwnd) {
+                newNotionHwnd := hwnd
+                break
+            }
         }
     }
     
@@ -46,13 +68,12 @@ if WinWait(notionExe, , 15) {
         WinMove 1920, 0, 1080, 1920, newNotionHwnd
         Sleep 200
         WinMaximize newNotionHwnd
-        
-        ; Switch back to main window and go to a different tab
+
+        ; Switch back to main window and close the leftover tab (the page we just popped out)
         WinActivate mainNotionHwnd
         Sleep 300
-        ; Use Ctrl+Shift+Tab to go to previous tab (away from Missing Semester)
-        Send "^+{Tab}"
-        Sleep 200
+        Send "^w"
+        Sleep 300
     }
     
     ; Re-position main Notion window on primary monitor (it may have moved)

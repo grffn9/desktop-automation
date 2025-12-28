@@ -22,7 +22,11 @@ start "" "C:\Users\griff\AppData\Local\Programs\notion-calendar-web\Notion Calen
 timeout /t 8
 
 :: 3. Trigger the AHK script to arrange windows
-start "" "C:\Users\griff\OneDrive\Documents\Projects\startup-routine-automation\window-arranger.exe"
+start "" /wait "C:\Users\griff\OneDrive\Documents\Projects\startup-routine-automation\window-arranger.exe"
 
-:: 4. Exit the batch script
+:: 4. End on Today's Targets
+powershell -command "Start-Process 'notion://www.notion.so/Today-s-Targets-1dcc1eef485d80deaebbc9bafeb466b0?source=copy_link'"
+timeout /t 2
+
+:: 5. Exit the batch script
 exit
