@@ -7,8 +7,9 @@
 ; Uncommon hotkey: Ctrl + Alt + Shift + F12
 ^!+F12::
 {
-    ; Go up one level from hotkeys/ to find the startup-routine-automation subfolder
-    vbsPath := A_ScriptDir "\..\startup-routine-automation\silent-start.vbs"
+    ; A_ScriptDir is the master.ahk/master.exe location (desktop-automation\)
+    ; startup-routine-automation is a sibling folder at the same level
+    vbsPath := A_ScriptDir "\startup-routine-automation\silent-start.vbs"
 
     if !FileExist(vbsPath)
     {
