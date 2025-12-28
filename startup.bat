@@ -1,0 +1,22 @@
+@echo off
+
+:: 1. Open the specific pages first (they will become tabs)
+powershell -command "Start-Process 'notion://www.notion.so/Today-s-Targets-1dcc1eef485d80deaebbc9bafeb466b0?source=copy_link'"
+timeout /t 2 
+powershell -command "Start-Process 'notion://www.notion.so/Startup-Routine-21fc1eef485d8058a87ff49f37706365?source=copy_link'"
+timeout /t 1
+powershell -command "Start-Process 'notion://www.notion.so/Personal-Value-Plan-1dcc1eef485d8081ac80f18a03ae13ef?source=copy_link'"
+timeout /t 1
+powershell -command "Start-Process 'notion://www.notion.so/Career-Value-Plan-1dcc1eef485d804bae6df704e9e422ae?source=copy_link'"
+timeout /t 1
+powershell -command "Start-Process 'notion://www.notion.so/Today-s-Targets-1dcc1eef485d80deaebbc9bafeb466b0?source=copy_link'"
+
+:: 2. Open Notion Calendar
+start "" "C:\Users\griff\AppData\Local\Programs\notion-calendar-web\Notion Calendar.exe"
+timeout /t 10
+
+:: 3. Trigger the AHK script to arrange windows
+start "" "C:\Users\griff\OneDrive\Documents\Projects\startup-routine-automation\window-arranger.exe"
+
+:: 4. Exit the batch script
+exit
