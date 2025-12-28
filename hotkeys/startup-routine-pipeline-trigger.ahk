@@ -4,8 +4,8 @@
 ; Triggers the existing startup automation pipeline:
 ; trigger-pipeline.ahk (hotkey) -> silent-start.vbs (hidden) -> startup.bat -> window-arranger.exe
 
-; Uncommon hotkey: Ctrl + Alt + Shift + F12
-^!+F12::
+; Win + Alt + S (Startup)
+#!s::
 {
     ; A_ScriptDir is the master.ahk/master.exe location (desktop-automation\)
     ; startup-routine-automation is a sibling folder at the same level
