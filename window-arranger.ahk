@@ -22,7 +22,8 @@ if WinWait(notionExe, , 15) {
     mainNotionHwnd := WinGetID(notionExe)
     
     ; 2. Create a NEW Notion window for Missing Semester
-    ; Ctrl+Shift+N opens a new Notion window
+    ; The startup.bat opened Missing Semester as the LAST tab, so it's currently active
+    ; Ctrl+Shift+N opens the current page in a new window
     Sleep 300
     Send "^+n"
     Sleep 1500  ; Wait for new window to spawn
@@ -39,28 +40,29 @@ if WinWait(notionExe, , 15) {
     }
     
     if (newNotionHwnd != 0) {
-        ; Activate and navigate the new window
-        WinActivate newNotionHwnd
-        Sleep 300
-        
-        ; Use Ctrl+L to open the "Open page" dialog, then paste the URL
-        ; Alternative: Ctrl+P for quick find, or Ctrl+K for link
-        Send "^l"
-        Sleep 500
-        
-        ; Type/paste the page URL (Notion will navigate to it)
-        SendText "https://www.notion.so/Missing-Semester-2cb9224d0442807db818fa30793d1738"
-        Sleep 300
-        Send "{Enter}"
-        Sleep 1000  ; Wait for page to load
-        
-        ; Position the new Notion window on portrait monitor (stacked with Calendar)
+        ; Position the new Notion window (Missing Semester) on portrait monitor
         WinRestore newNotionHwnd
         Sleep 200
         WinMove 1920, 0, 1080, 1920, newNotionHwnd
         Sleep 200
         WinMaximize newNotionHwnd
+        
+        ; Switch back to main window and go to a different tab
+        WinActivate mainNotionHwnd
+        Sleep 300
+        ; Use Ctrl+Shift+Tab to go to previous tab (away from Missing Semester)
+        Send "^+{Tab}"
+        Sleep 200
     }
+    
+    ; Re-position main Notion window on primary monitor (it may have moved)
+    WinActivate mainNotionHwnd
+    Sleep 200
+    WinRestore mainNotionHwnd
+    Sleep 200
+    WinMove 0, 0, 1920, 1080, mainNotionHwnd
+    Sleep 200
+    WinMaximize mainNotionHwnd
 }
 
 ; 3. Handle Notion Calendar (Display 1 - Portrait, stacked with Missing Semester)
