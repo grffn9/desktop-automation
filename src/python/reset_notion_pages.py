@@ -23,14 +23,18 @@ if not NOTION_API_KEY:
     sys.exit(1)
 
 
-GRATITUDE_PAGE_ID = "2e3c1eef485d81b29483e350d28ca2ca"
+GRATITUDE_PAGE_ID = os.getenv("GRATITUDE_PAGE_ID", "2e3c1eef485d81b29483e350d28ca2ca")
 
 # Page IDs extracted from your provided links
-PAGES_TO_RESET = [
-    "21fc1eef485d8058a87ff49f37706365", # Startup Routine
-    "21fc1eef485d8072b818f2935920bd6e", # Lunchtime Routine
-    "21fc1eef485d80fcbe1bc93ce7210342", # Shutdown Routine
-]
+pages_env = os.getenv("PAGES_TO_RESET")
+if pages_env:
+    PAGES_TO_RESET = [p.strip() for p in pages_env.split(",")]
+else:
+    PAGES_TO_RESET = [
+        "21fc1eef485d8058a87ff49f37706365", # Startup Routine
+        "21fc1eef485d8072b818f2935920bd6e", # Lunchtime Routine
+        "21fc1eef485d80fcbe1bc93ce7210342", # Shutdown Routine
+    ]
 # ---------------------
 
 HEADERS = {
@@ -51,11 +55,7 @@ def make_request(url, method="GET", payload=None):
         print(f"Request failed: {e.code} {e.reason} for {url}")
         try:
              print(e.read().decode())
-        except:
-             pass
-        return None
-
-def uncheck_blocks(page_id):
+        except Exception:
     print(f"Checking page: {page_id}...")
     url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
     data = make_request(url)

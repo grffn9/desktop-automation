@@ -2,6 +2,19 @@
 #Requires AutoHotkey v2.0
 SetTitleMatchMode 2
 
+; Retrieve Secondary Monitor bounds dynamically (assuming Monitor 2)
+Try {
+    MonitorGetWorkArea(2, &secLeft, &secTop, &secRight, &secBottom)
+    secWidth := secRight - secLeft
+    secHeight := secBottom - secTop
+} Catch {
+    ; Fallback if monitor 2 not found
+    secLeft := -1920
+    secTop := 0
+    secWidth := 1920
+    secHeight := 1080
+}
+
 ; Give apps a moment to fully initialize their windows
 Sleep 2000
 
@@ -63,10 +76,10 @@ if WinWait(notionExe, , 15) {
     
     if (newNotionHwnd != 0) {
         ; Position the new Notion window (Missing Semester) on Secondary monitor (Left)
-        ; Coordinate -1920 is the exact left edge of the secondary monitor based on debug output
+        ; Coordinate logic is now dynamic based on MonitorGetWorkArea
         WinRestore newNotionHwnd
         Sleep 200
-        WinMove -1920, 0, 1920, 1080, newNotionHwnd
+        WinMove secLeft, secTop, secWidth, secHeight, newNotionHwnd
         Sleep 200
         WinMaximize newNotionHwnd
 
@@ -97,8 +110,8 @@ if WinWait(calendarExe, , 15) {
     WinRestore calendarExe  ; Restore first in case it's already maximized
     Sleep 200
     ; Position Notion Calendar on Secondary monitor (Left)
-    ; Coordinate -1920 is the exact left edge of the secondary monitor
-    WinMove -1920, 0, 1920, 1080, calendarExe
+    ; Coordinate logic is now dynamic based on MonitorGetWorkArea
+    WinMove secLeft, secTop, secWidth, secHeight, calendarExe
     Sleep 200
     WinMaximize calendarExe
 }
